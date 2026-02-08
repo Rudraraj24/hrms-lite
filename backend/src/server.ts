@@ -11,7 +11,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// CORS configuration for production
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://hrms-lite.vercel.app',
+    'https://hrms-lite-*.vercel.app'
+  ],
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.use('/api/employees', employeeRoutes);
@@ -27,9 +36,10 @@ const startServer = async () => {
     console.log('✅ Database synchronized');
     
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
-      console.log(`📊 Database: SQLite (file-based)`);
+      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`📊 Database: SQLite`);
     });
+
   } catch (error) {
     console.error('❌ Error starting server:', error);
     process.exit(1);
